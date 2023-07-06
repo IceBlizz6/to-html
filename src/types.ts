@@ -8,6 +8,7 @@ import type {
   PortableTextListItemType,
   TypedObject,
 } from '@portabletext/types'
+import { VNode } from 'vue'
 
 /**
  * Options for the Portable Text to HTML function
@@ -33,7 +34,7 @@ export interface PortableTextOptions {
  *
  * @template N Node types we expect to be rendering (`PortableTextBlock` should usually be part of this)
  */
-export type PortableTextComponent<N> = (options: PortableTextComponentOptions<N>) => string
+export type PortableTextComponent<N> = (options: PortableTextComponentOptions<N>) => VNode
 
 /**
  * Component function type for rendering portable text blocks (paragraphs, headings, blockquotes etc)
@@ -56,12 +57,12 @@ export type PortableTextListItemComponent = PortableTextComponent<PortableTextLi
  * @template M The mark type we expect
  */
 export type PortableTextMarkComponent<M extends TypedObject = any> = (
-  options: PortableTextMarkComponentOptions<M>,
-) => string
+  options: PortableTextMarkComponentOptions<M>
+) => VNode
 
 export type PortableTextTypeComponent<V extends TypedObject = any> = (
-  options: PortableTextTypeComponentOptions<V>,
-) => string
+  options: PortableTextTypeComponentOptions<V>
+) => VNode
 
 /**
  * Object defining the different component functions to use for rendering various aspects
@@ -136,7 +137,7 @@ export interface PortableTextHtmlComponents {
    * Component to use for rendering "hard breaks", eg `\n` inside of text spans
    * Will by default render a `<br />`. Pass `false` to render as-is (`\n`)
    */
-  hardBreak: (() => string) | false
+  hardBreak: (() => VNode)
 
   /**
    * Component function used when encountering a mark type there is no registered component for
@@ -194,7 +195,7 @@ export interface PortableTextComponentOptions<T> {
   /**
    * Serialized HTML of child nodes of this block/type
    */
-  children?: string
+  children?: VNode[]
 
   /**
    * Function used to render any node that might appear in a portable text array or block,
@@ -240,7 +241,7 @@ export interface PortableTextMarkComponentOptions<M extends TypedObject = Arbitr
   /**
    * Serialized HTML of child nodes of this mark
    */
-  children: string
+  children: VNode[]
 
   /**
    * Function used to render any node that might appear in a portable text array or block,
@@ -260,7 +261,7 @@ export type UnknownNodeType = {[key: string]: unknown; _type: string} | TypedObj
  * Function that renders any node that might appear in a portable text array or block,
  * including virtual "toolkit"-nodes like lists and nested spans
  */
-export type NodeRenderer = <T extends TypedObject>(options: Serializable<T>) => string
+export type NodeRenderer = <T extends TypedObject>(options: Serializable<T>) => VNode
 
 export type NodeType = 'block' | 'mark' | 'blockStyle' | 'listStyle' | 'listItemStyle'
 
@@ -278,7 +279,7 @@ export interface Serializable<T> {
 
 export interface SerializedBlock {
   _key: string
-  children: string
+  children: VNode[]
   index: number
   isInline: boolean
   node: PortableTextBlock | PortableTextListItemBlock

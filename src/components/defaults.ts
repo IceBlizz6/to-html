@@ -10,21 +10,22 @@ import {
   DefaultUnknownMark,
   DefaultUnknownType,
 } from './unknown'
+import { VNode, h } from 'vue'
 
-export const DefaultHardBreak = (): string => '<br/>'
+export const DefaultHardBreak = (): VNode => h("br", "")
 
 export const defaultPortableTextBlockStyles: Record<
   PortableTextBlockStyle,
   PortableTextBlockComponent | undefined
 > = {
-  normal: ({children}) => `<p>${children}</p>`,
-  blockquote: ({children}) => `<blockquote>${children}</blockquote>`,
-  h1: ({children}) => `<h1>${children}</h1>`,
-  h2: ({children}) => `<h2>${children}</h2>`,
-  h3: ({children}) => `<h3>${children}</h3>`,
-  h4: ({children}) => `<h4>${children}</h4>`,
-  h5: ({children}) => `<h5>${children}</h5>`,
-  h6: ({children}) => `<h6>${children}</h6>`,
+  normal: ({children}) => h("p", children),
+  blockquote: ({children}) => h("blockquote", children),
+  h1: ({children}) => h("h1", children),
+  h2: ({children}) => h("h2", children),
+  h3: ({children}) => h("h3", children),
+  h4: ({children}) => h("h4", children),
+  h5: ({children}) => h("h5", children),
+  h6: ({children}) => h("h6", children),
 }
 
 export const defaultComponents: PortableTextHtmlComponents = {

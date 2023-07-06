@@ -39,11 +39,12 @@ import {
   unknownMarkWarning,
   unknownTypeWarning,
 } from './warnings'
+import { VNode, h } from 'vue'
 
 export function toHTML<B extends TypedObject = PortableTextBlock | ArbitraryTypedObject>(
   value: B | B[],
   options: PortableTextOptions = {},
-): string {
+): VNode[] {
   const {
     components: componentOverrides,
     onMissingComponent: missingComponentHandler = printWarning,
@@ -61,14 +62,14 @@ export function toHTML<B extends TypedObject = PortableTextBlock | ArbitraryType
     renderNode({node: node, index, isInline: false, renderNode}),
   )
 
-  return rendered.join('')
+  return rendered
 }
 
 const getNodeRenderer = (
   components: PortableTextHtmlComponents,
   handleMissingComponent: MissingComponentHandler,
 ): NodeRenderer => {
-  function renderNode<N extends TypedObject>(options: Serializable<N>): string {
+  function renderNode<N extends TypedObject>(options: Serializable<N>): VNode {
     const {node, index, isInline} = options
 
     if (isPortableTextToolkitList(node)) {
@@ -97,7 +98,7 @@ const getNodeRenderer = (
   function renderListItem(
     node: PortableTextListItemBlock<PortableTextMarkDefinition, PortableTextSpan>,
     index: number,
-  ): string {
+  ): VNode {
     const tree = serializeBlock({node, index, isInline: false, renderNode})
     const renderer = components.listItem
     const handler = typeof renderer === 'function' ? renderer : renderer[node.listItem]
@@ -116,13 +117,13 @@ const getNodeRenderer = (
       // Wrap any other style in whatever the block component says to use
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const {listItem, ...blockNode} = node
-      children = renderNode({node: blockNode, index, isInline: false, renderNode})
+      children = [ renderNode({node: blockNode, index, isInline: false, renderNode}) ]
     }
 
     return itemHandler({value: node, index, isInline: false, renderNode, children})
   }
 
-  function renderList(node: HtmlPortableTextList, index: number): string {
+  function renderList(node: HtmlPortableTextList, index: number): VNode {
     const children = node.children.map((child, childIndex) =>
       renderNode({
         node: child._key ? child : {...child, _key: `li-${index}-${childIndex}`},
@@ -141,10 +142,10 @@ const getNodeRenderer = (
       handleMissingComponent(unknownListStyleWarning(style), {nodeType: 'listStyle', type: style})
     }
 
-    return list({value: node, index, isInline: false, renderNode, children: children.join('')})
+    return list({value: node, index, isInline: false, renderNode, children: children })
   }
 
-  function renderSpan(node: ToolkitNestedPortableTextSpan): string {
+  function renderSpan(node: ToolkitNestedPortableTextSpan): VNode {
     const {markDef, markType, markKey} = node
     const span = components.marks[markType] || components.unknownMark
     const children = node.children.map((child, childIndex) =>
@@ -161,12 +162,11 @@ const getNodeRenderer = (
       markType,
       markKey,
       renderNode,
-      children: children.join(''),
+      children: children,
     })
   }
 
-  function renderBlock(node: PortableTextBlock, index: number, isInline: boolean): string {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  function renderBlock(node: PortableTextBlock, index: number, isInline: boolean): VNode {
     const {_key, ...props} = serializeBlock({node, index, isInline, renderNode})
     const style = props.node.style || 'normal'
     const handler =
@@ -183,16 +183,16 @@ const getNodeRenderer = (
     return block({...props, value: props.node, renderNode})
   }
 
-  function renderText(node: ToolkitTextNode): string {
+  function renderText(node: ToolkitTextNode): VNode {
     if (node.text === '\n') {
       const hardBreak = components.hardBreak
-      return hardBreak ? hardBreak() : '\n'
+      return hardBreak ? hardBreak() : h("span", "\n") 
     }
 
-    return escapeHTML(node.text)
+    return h("span", escapeHTML(node.text)) 
   }
 
-  function renderCustomBlock(value: TypedObject, index: number, isInline: boolean): string {
+  function renderCustomBlock(value: TypedObject, index: number, isInline: boolean): VNode {
     const node = components.types[value._type]
 
     if (!node) {
@@ -223,7 +223,7 @@ function serializeBlock(options: Serializable<PortableTextBlock>): SerializedBlo
 
   return {
     _key: node._key || `block-${index}`,
-    children: children.join(''),
+    children: children,
     index,
     isInline,
     node,

@@ -1,8 +1,9 @@
+import { h } from 'vue'
 import type {PortableTextListComponent, PortableTextListItemComponent} from '../types'
 
 export const defaultLists: Record<'number' | 'bullet', PortableTextListComponent> = {
-  number: ({children}) => `<ol>${children}</ol>`,
-  bullet: ({children}) => `<ul>${children}</ul>`,
+  number: ({children}) => h("ol", children),
+  bullet: ({children}) => h("ul", children),
 }
 
-export const DefaultListItem: PortableTextListItemComponent = ({children}) => `<li>${children}</li>`
+export const DefaultListItem: PortableTextListItemComponent = ({children}) => h("li", children)

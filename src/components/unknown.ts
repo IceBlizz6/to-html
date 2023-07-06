@@ -1,3 +1,4 @@
+import { h } from 'vue'
 import type {PortableTextHtmlComponents} from '../types'
 import {unknownTypeWarning} from '../warnings'
 
@@ -7,29 +8,29 @@ export const DefaultUnknownType: PortableTextHtmlComponents['unknownType'] = ({
 }) => {
   const warning = unknownTypeWarning(value._type)
   return isInline
-    ? `<span style="display:none">${warning}</span>`
-    : `<div style="display:none">${warning}</div>`
+    ? h("span", { style: "display:none" }, warning)
+    : h("div", { style: "display:none" }, warning)
 }
 
 export const DefaultUnknownMark: PortableTextHtmlComponents['unknownMark'] = ({
   markType,
   children,
 }) => {
-  return `<span class="unknown__pt__mark__${markType}">${children}</span>`
+  return h("span", { class: `unknown__pt__mark__${markType}` }, children)
 }
 
 export const DefaultUnknownBlockStyle: PortableTextHtmlComponents['unknownBlockStyle'] = ({
   children,
 }) => {
-  return `<p>${children}</p>`
+  return h("p", children)
 }
 
 export const DefaultUnknownList: PortableTextHtmlComponents['unknownList'] = ({children}) => {
-  return `<ul>${children}</ul>`
+  return h("ul", children)
 }
 
 export const DefaultUnknownListItem: PortableTextHtmlComponents['unknownListItem'] = ({
   children,
 }) => {
-  return `<li>${children}</li>`
+  return h("li", children)
 }
