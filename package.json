@@ -1,20 +1,17 @@
 {
-  "name": "@portabletext/to-html",
+  "name": "@iceblizz/portable-text-to-vue",
   "version": "2.0.13",
-  "description": "Render Portable Text to HTML",
+  "description": "Render Portable Text to vue template",
   "keywords": [
     "portable-text"
   ],
-  "homepage": "https://github.com/portabletext/to-html#readme",
-  "bugs": {
-    "url": "https://github.com/portabletext/to-html/issues"
-  },
+  "homepage": "https://github.com/IceBlizz6/to-html",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/portabletext/to-html.git"
+    "url": "git+ssh://git@github.com:IceBlizz6/to-html.git"
   },
   "license": "MIT",
-  "author": "Sanity.io <hello@sanity.io>",
+  "author": "IceBlizz6 <iceblizz6@proton.me>",
   "sideEffects": false,
   "type": "commonjs",
   "exports": {
