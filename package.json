@@ -56,7 +56,6 @@
       "prettier --write --cache --ignore-unknown"
     ]
   },
-  "browserslist": "extends @sanity/browserslist-config",
   "prettier": {
     "bracketSpacing": false,
     "plugins": [
