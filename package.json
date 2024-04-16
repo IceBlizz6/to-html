@@ -91,7 +91,7 @@
     ]
   },
   "dependencies": {
-    "vue": "3.3.7",
+    "vue": "3.4.22",
     "@portabletext/toolkit": "^2.0.15",
     "@portabletext/types": "^2.0.13"
   },
